@@ -121,11 +121,21 @@ deploy: manifests kustomize ## Deploy controller to the K8s cluster specified in
 	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
 	$(KUSTOMIZE) build config/default | $(KUBECTL) apply -f -
 
+.PHONY: generate-manifest
+generate-manifest: manifests kustomize ## Deploy controller to the K8s cluster specified in ~/.kube/config.
+	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
+	$(KUSTOMIZE) build config/default > manifest.yaml
+
 .PHONY: undeploy
 undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
 	$(KUSTOMIZE) build config/default | $(KUBECTL) delete --ignore-not-found=$(ignore-not-found) -f -
 
 ##@ Build Dependencies
+.PHONY: module-build
+module-build: kyma kustomize ## Build the Module and push it to a registry defined in MODULE_REGISTRY
+	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
+	kyma-dev alpha create module --channel=fast --name acme.io/module/dummy --version 0.0.1 --path . --output=dummy-fast.yaml --registry=--registry=http://localhost:5001
+
 
 ## Location to install dependencies to
 LOCALBIN ?= $(shell pwd)/bin

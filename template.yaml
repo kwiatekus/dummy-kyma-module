@@ -1,0 +1,54 @@
+apiVersion: operator.kyma-project.io/v1beta2
+kind: ModuleTemplate
+metadata:
+  name: moduletemplate-dummy
+  namespace: kcp-system
+  labels:
+    "operator.kyma-project.io/module-name": "dummy"
+spec:
+  channel: fast
+  data:
+    apiVersion: operator.acme.io/v1alpha1
+    kind: Dummy
+    metadata:
+      labels:
+        app.kubernetes.io/name: dummy
+        app.kubernetes.io/instance: dummy-sample
+        app.kubernetes.io/part-of: dummy-kyma-module
+        app.kubernetes.io/managed-by: kustomize
+        app.kubernetes.io/created-by: dummy-kyma-module
+      name: dummy-sample
+    spec:
+      foo: bar
+  descriptor:
+    component:
+      componentReferences: []
+      name: acme.io/module/dummy
+      provider: internal
+      repositoryContexts:
+      - baseUrl: http://localhost:5001
+        componentNameMapping: urlPath
+        type: ociRegistry
+      resources:
+      - access:
+          digest: sha256:ddff588d6f632608cee8283fcf5295a4a17e34c51f49458b5567e23b610f1bcd
+          type: localOciBlob
+        name: raw-manifest
+        relation: local
+        type: yaml
+        version: v0.0.1
+      sources:
+      - access:
+          commit: 142228da488f5ddd3a7ae01de3d687aa63c17597
+          repoUrl: github.com/acme/dummy-kyma-module.git
+          type: gitHub
+        labels:
+        - name: git.kyma-project.io/ref
+          value: refs/heads/main
+          version: v1
+        name: module-sources
+        type: git
+        version: v0.0.1
+      version: v0.0.1
+    meta:
+      schemaVersion: v2
