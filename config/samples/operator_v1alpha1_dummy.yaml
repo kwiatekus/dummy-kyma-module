@@ -1,0 +1,12 @@
+apiVersion: operator.acme.io/v1alpha1
+kind: Dummy
+metadata:
+  labels:
+    app.kubernetes.io/name: dummy
+    app.kubernetes.io/instance: dummy-sample
+    app.kubernetes.io/part-of: dummy-kyma-module
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: dummy-kyma-module
+  name: dummy-sample
+spec:
+  # TODO(user): Add fields here
